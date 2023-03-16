@@ -52,4 +52,6 @@ func main() {
 	array7 := []int{2, 1, 4, 3, 5, 10, 12}
 	fmt.Println(scr.LongestIncreasingSubsequenceOptimal(array7))
 	fmt.Println(scr.LongestIncreasingSubsequence(array7))
+
+	fmt.Println(scr.LCS("aaab", "abaa"))
 }

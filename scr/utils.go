@@ -433,3 +433,42 @@ func LongestIncreasingSubsequenceOptimal(inputList []int) int {
 	}
 	return maxElement(res)
 }
+
+//LCS
+// a a b a c s1
+// a b a c d s2
+// result is  3 | a b c
+//dp[i][j]
+//dp[n][m]
+/*
+				s1[i] = s2[j] dp[i - 1][j - 1] + 1
+dp[i][j] ||
+				!= max(dp[i - 1][j], dp[i][j - 1])
+res is dp[n][m]
+example
+			""a d c
+			0 1 2 3
+i   ""  0	0 0 0 0
+	a	1   0 1 1 1
+	b	2	0 1 1 2
+	c	3	0 1 1 2
+*/
+//O(n*m)
+func LCS(s1, s2 string) int {
+	n := len(s1)
+	m := len(s2)
+	dp := make([][]int, n+1)
+	for i := 0; i < n+1; i++ {
+		dp[i] = make([]int, m+1)
+	}
+	for i := 1; i < n+1; i++ {
+		for j := 1; j < m+1; j++ {
+			if s1[i-1] == s2[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = maximum(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+	return dp[n][m]
+}
