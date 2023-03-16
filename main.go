@@ -48,4 +48,8 @@ func main() {
 	}
 	fmt.Printf("max sum ")
 	fmt.Println(scr.MaxScore(matrix))
+
+	array7 := []int{2, 1, 4, 3, 5, 10, 12}
+	fmt.Println(scr.LongestIncreasingSubsequenceOptimal(array7))
+	fmt.Println(scr.LongestIncreasingSubsequence(array7))
 }

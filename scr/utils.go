@@ -314,9 +314,6 @@ func FibIterative(n int) []int {
 	return fb
 }
 
-// Dynamic Programming
-// find the longest substring element (not separately)
-
 func maximum(a int, b int) int {
 	if a > b {
 		return a
@@ -325,6 +322,10 @@ func maximum(a int, b int) int {
 	}
 }
 
+// Dynamic Programming
+
+// LongestIncreasingSubList find the longest substring element (not separately)
+// example 3, 1, 2, 5, 0   result is 3 |(1 2 5)
 func LongestIncreasingSubList(inputList []int) int {
 	var subList []int
 	if len(inputList) == 0 {
@@ -346,6 +347,7 @@ func LongestIncreasingSubList(inputList []int) int {
 	return maxLen
 }
 
+// Dynamic Programming
 //we have a board, we need to reach from the upper left corner to the lower right corner.
 //In the columns are written units and must collect the maximum
 // 3 1 2 77
@@ -377,4 +379,57 @@ func MaxScore(a [][]int) int {
 	}
 
 	return dp[n-1][m-1]
+}
+
+// Dynamic Programming
+
+// LongestIncreasingSubsequence (LIS) find the longest substring element (separately)
+// example 2, 1, 4, 3, 5, 10, 12  result is 5 |(1, 4, 5,10, 12)
+// dp[i] = max(dp[i] + 1)
+//
+//	  0 <=j < i
+//	inputList[i] > inputList[j]
+//
+// result max(dp[i])
+// O(n^2)
+func LongestIncreasingSubsequence(input []int) int {
+	n := len(input)
+	dp := make([]int, n)
+	for index := range dp {
+		dp[index] = 1
+	}
+
+	for i := 1; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if input[i] > input[j] {
+				dp[i] = maximum(dp[j]+1, dp[i])
+			}
+		}
+	}
+	return maxElement(dp)
+}
+
+// LongestIncreasingSubsequenceOptimal O(nlog n)
+func LongestIncreasingSubsequenceOptimal(inputList []int) int {
+	res := make([]int, len(inputList))
+	res[0] = 1
+	dp := make([]int, 1)
+	dp[0] = inputList[0]
+	for i := 1; i < len(inputList); i++ {
+		if inputList[i] > dp[len(dp)-1] {
+			dp = append(dp, inputList[i])
+			res[i] = len(dp)
+		} else {
+			k := -1
+			for j := len(dp) - 2; j > -1; j-- {
+				if dp[j] < inputList[i] {
+					k = j
+					break
+				}
+			}
+			dp[k+1] = inputList[i]
+			res[i] = k + 2
+		}
+	}
+	return maxElement(res)
 }
