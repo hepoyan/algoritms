@@ -237,3 +237,144 @@ func quickSortImpl(inputList []int, l int, r int) { //[l,r)
 	quickSortImpl(inputList, l, pi)
 	quickSortImpl(inputList, pi+1, r)
 }
+
+//Search algorithms
+
+// BinarySearchRecursive O(log n)
+func BinarySearchRecursive(inputSortedList []int, targetElement int) (bool, int) {
+	return binarySearchImp(inputSortedList, 0, len(inputSortedList), targetElement)
+}
+
+func binarySearchImp(inputList []int, l int, r int, targetElement int) (bool, int) {
+	if l == r {
+		return false, -1
+	}
+	mid := (l + r) / 2
+	if targetElement == inputList[mid] {
+		return true, mid
+	}
+	if targetElement < inputList[mid] {
+		return binarySearchImp(inputList, l, mid, targetElement)
+	} else {
+		return binarySearchImp(inputList, mid+1, r, targetElement)
+	}
+}
+
+func BinarySearchIterative(inputSortedList []int, lookingFor int) (bool, int) {
+	l := 0
+	r := len(inputSortedList) - 1
+
+	var mid int
+	var midValue int
+	for l <= r {
+		mid = l + (r-l)/2
+		midValue = inputSortedList[mid]
+		if midValue == lookingFor {
+			return true, mid
+		} else if midValue > lookingFor {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+
+	return false, -1
+}
+
+// FibRecursive approx O(2^n)
+func FibRecursive(n int) int {
+	if n == 1 || n == 0 {
+		return 1
+	}
+	return FibRecursive(n-1) + FibRecursive(n-2)
+}
+
+// FibRecursiveOptimal  O(n)
+func FibRecursiveOptimal(n int) int {
+	fb := make([]int, n+1)
+	if n == 1 || n == 0 {
+		fb[n] = 1
+		return fb[n]
+	}
+	if fb[n] != 0 {
+		return fb[n]
+	}
+	fb[n] = FibRecursive(n-1) + FibRecursive(n-2)
+	return fb[n]
+}
+
+// FibIterative O(n)
+func FibIterative(n int) []int {
+	fb := make([]int, n+1)
+	fb[0] = 1
+	fb[1] = 1
+	for i := 2; i <= n; i++ {
+		fb[i] = fb[i-1] + fb[i-2]
+	}
+	return fb
+}
+
+// Dynamic Programming
+// find the longest substring element (not separately)
+
+func maximum(a int, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func LongestIncreasingSubList(inputList []int) int {
+	var subList []int
+	if len(inputList) == 0 {
+		return 0
+	}
+	maxLen := 1
+	current := 1
+	for i := 0; i < len(inputList)-1; i++ {
+		if inputList[i] < inputList[i+1] {
+			subList = append(subList, inputList[i], inputList[i+1])
+			current++
+		} else {
+			maxLen = maximum(maxLen, current)
+			current = 1
+		}
+
+	}
+	maxLen = maximum(maxLen, current)
+	return maxLen
+}
+
+//we have a board, we need to reach from the upper left corner to the lower right corner.
+//In the columns are written units and must collect the maximum
+// 3 1 2 77
+// 1 5 1 1
+// 4 4 4 4
+// dp[i][j] shows how many points A[i][j] will score by landing on the box
+// dp[i][j] = max(dp[i - 1][j] ,dp[i][j - 1]) + A[i][j]
+
+func MaxScore(a [][]int) int {
+	n := len(a)
+	m := len(a[0])
+
+	dp := make([][]int, n)
+	for i := 0; i < n; i++ {
+		dp[i] = make([]int, m)
+	}
+	dp[0][0] = a[0][0]
+	for i := 1; i < n; i++ {
+		dp[i][0] = dp[i-1][0] + a[i][0]
+	}
+
+	for j := 1; j < m; j++ {
+		dp[0][j] = dp[0][j-1] + a[0][j]
+	}
+	for i := 1; i < n; i++ {
+		for j := 1; j < m; j++ {
+			dp[i][j] = maximum(dp[i-1][j], dp[i][j-1]) + a[i][j]
+		}
+	}
+
+	return dp[n-1][m-1]
+}
