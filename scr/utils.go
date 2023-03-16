@@ -446,12 +446,12 @@ dp[i][j] ||
 				!= max(dp[i - 1][j], dp[i][j - 1])
 res is dp[n][m]
 example
-			""a d c
-			0 1 2 3
-i   ""  0	0 0 0 0
-	a	1   0 1 1 1
-	b	2	0 1 1 2
-	c	3	0 1 1 2
+    ""a d c
+    0 1 2 3
+i"" 0 0 0 0 0
+  a	1 0 1 1 1
+  b	2 0 1 1 2
+  c	3 0 1 1 2
 */
 //O(n*m)
 func LCS(s1, s2 string) int {
