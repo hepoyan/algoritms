@@ -1,6 +1,7 @@
 package scr
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -597,4 +598,25 @@ func Knapsack(knapsack int, w []int, c []int) int {
 	}
 
 	return maxElement(dp)
+}
+
+// ExtKnapsack use each element as much as we want
+func ExtKnapsack(knapsack int, w []int, c []int) int {
+
+	dp := make([]int, knapsack+1)
+	for i := 0; i < knapsack; i++ {
+		dp[i] = -1
+	}
+	n := len(w)
+	dp[0] = 0
+	for j := 0; j < n; j++ {
+		for i := w[j]; i <= knapsack; i++ {
+			if dp[i-w[j]] != -1 {
+				dp[i] = maximum(dp[i], dp[i-w[j]]+c[j])
+			}
+		}
+
+	}
+	fmt.Println(dp)
+	return dp[knapsack]
 }
