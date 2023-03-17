@@ -57,13 +57,11 @@ func main() {
 
 	fmt.Println(scr.RedDistance("abc", "adck"))
 
-	c := []int{28, 20, 50, 100}
-	weight := []int{15, 15, 18, 2}
+	c := []int{55, 10, 47, 5, 4, 50, 8, 61, 85, 87}
+	weight := []int{95, 4, 60, 32, 23, 72, 80, 62, 65, 46}
 
-	fmt.Println(scr.GreedyKnapsack(35, weight, c))
+	fmt.Println(scr.GreedyKnapsack(269, weight, c))
+
+	fmt.Println(scr.Knapsack(269, weight, c))
 
 }
-
-// example  a b c
-//
-//	a d c k

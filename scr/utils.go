@@ -542,8 +542,8 @@ func RedDistance(s1, s2 string) int {
 }
 
 type Pair struct {
-	First   int
-	Seconds int
+	Wight int
+	Price int
 }
 
 // GreedyKnapsack
@@ -555,22 +555,46 @@ func GreedyKnapsack(knapsack int, w []int, c []int) float64 {
 	n := len(w)
 	cw := make([]Pair, n)
 	for i := 0; i < n; i++ {
-		cw[i] = Pair{First: w[i], Seconds: c[i]}
+		cw[i] = Pair{Wight: w[i], Price: c[i]}
 	}
 	sort.Slice(cw, func(i, j int) bool {
-		return cw[i].Seconds*cw[j].First > cw[j].Seconds*cw[i].First
+		return cw[i].Price*cw[j].Wight > cw[j].Price*cw[i].Wight
 	})
 	var cost float64 = 0
 	i := 0
 	for knapsack > 0 && n != i {
-		if cw[i].First <= knapsack {
-			cost += float64(cw[i].Seconds)
-			knapsack -= cw[i].First
+		if cw[i].Wight <= knapsack {
+			cost += float64(cw[i].Price)
+			knapsack -= cw[i].Wight
 		} else {
-			cost += float64(cw[i].Seconds*knapsack) / float64(cw[i].First)
+			cost += float64(cw[i].Price*knapsack) / float64(cw[i].Wight)
 			break
 		}
 		i++
 	}
 	return cost
+}
+
+// Knapsack Note: The constraint here is we can either put an item completely into the bag or cannot put it at all [It is not possible to put a part of an item into the bag].
+// dp[i] = max{dp[i - w[j]] != 1, dp[i - w[j]] + c[j]}
+//
+//	1<j<n
+func Knapsack(knapsack int, w []int, c []int) int {
+
+	dp := make([]int, knapsack+1)
+	for i := 0; i < knapsack; i++ {
+		dp[i] = -1
+	}
+	n := len(w)
+	dp[0] = 0
+
+	for i := 0; i < n; i++ {
+		for j := knapsack; j >= 0; j-- {
+			if j-w[i] >= 0 && dp[j-w[i]] != -1 {
+				dp[j] = maximum(dp[j], dp[j-w[i]]+c[i])
+			}
+		}
+	}
+
+	return maxElement(dp)
 }
