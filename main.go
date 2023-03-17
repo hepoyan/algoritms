@@ -54,4 +54,16 @@ func main() {
 	fmt.Println(scr.LongestIncreasingSubsequence(array7))
 
 	fmt.Println(scr.LCS("aaab", "abaa"))
+
+	fmt.Println(scr.RedDistance("abc", "adck"))
+
+	c := []int{28, 20, 50, 100}
+	weight := []int{15, 15, 18, 2}
+
+	fmt.Println(scr.GreedyKnapsack(35, weight, c))
+
 }
+
+// example  a b c
+//
+//	a d c k

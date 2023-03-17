@@ -1,5 +1,9 @@
 package scr
 
+import (
+	"sort"
+)
+
 // GetPrimeNumbers O(n * sqrt(n))
 func GetPrimeNumbers(n int) []int {
 	var resArr []int
@@ -434,26 +438,32 @@ func LongestIncreasingSubsequenceOptimal(inputList []int) int {
 	return maxElement(res)
 }
 
-//LCS
-// a a b a c s1
-// a b a c d s2
-// result is  3 | a b c
-//dp[i][j]
-//dp[n][m]
-/*
-				s1[i] = s2[j] dp[i - 1][j - 1] + 1
-dp[i][j] ||
-				!= max(dp[i - 1][j], dp[i][j - 1])
-res is dp[n][m]
-example
-    ""a d c
-    0 1 2 3
-i"" 0 0 0 0 0
-  a	1 0 1 1 1
-  b	2 0 1 1 2
-  c	3 0 1 1 2
-*/
-//O(n*m)
+// LCS
+// a a b a second s1
+// a b a second d s2
+// result is  3 | a b second
+// dp[i][j]
+// dp[n][m]
+//
+//	s1[i] = s2[j] dp[i - 1][j - 1] + 1
+//
+// dp[i][j] ||
+//
+//	!= max(dp[i - 1][j], dp[i][j - 1])
+//
+// res is dp[n][m]
+// example
+//
+//	""a d second
+//	0 1 2 3
+//
+// i"" 0 0 0 0 0
+//
+//	a	1 0 1 1 1
+//	b	2 0 1 1 2
+//	second	3 0 1 1 2
+//
+// O(n*m)
 func LCS(s1, s2 string) int {
 	n := len(s1)
 	m := len(s2)
@@ -471,4 +481,96 @@ func LCS(s1, s2 string) int {
 		}
 	}
 	return dp[n][m]
+}
+
+// we have 2 different strings,
+// the minimum number of steps through which
+// we can get the second from the first
+//
+//	s[i] delete	dp[i - 1][j] + 1
+//
+// dp[i][j] = ||  t[j] add      dp[i][j - 1] + 1
+//
+//	s[i] = t[j]	dp[i - 1][j - 1]
+//	!= change 	dp[i - 1][j - 1] +1
+//
+// example  a b second
+//
+//	a d second k
+//
+// a b second -> change b
+// res a d second
+// res -> add k
+// a d second k
+// use in correct the error when writing something on the phone
+
+func RedDistance(s1, s2 string) int {
+	n := len(s1)
+	m := len(s2)
+	dp := make([][]int, n+1)
+	for i := 0; i < n+1; i++ {
+		dp[i] = make([]int, m+1)
+	}
+
+	for i := 0; i < n+1; i++ {
+		dp[i][0] = 1
+	}
+
+	for j := 0; j < m+1; j++ {
+		dp[0][j] = j
+	}
+
+	for i := 1; i < n+1; i++ {
+		for j := 1; j < m+1; j++ {
+			case1 := dp[i-1][j] + 1
+			case2 := dp[i][j-1] + 1
+			case3 := dp[i-1][j-1]
+			if s1[i-1] != s2[j-1] {
+				case3++
+			}
+			dp[i][j] = case1
+			if case2 < dp[i][j] {
+				dp[i][j] = case2
+			}
+			if case3 < dp[i][j] {
+				dp[i][j] = case3
+			}
+		}
+	}
+
+	return dp[n][m]
+}
+
+type Pair struct {
+	First   int
+	Seconds int
+}
+
+// GreedyKnapsack
+// We are given N items where each item has some weight and profit associated with it.
+// We are also given a bag with capacity W, [i.e., the bag can hold at most W weight in it].
+// The target is to put the items into the bag such that the sum of profits associated with them is the maximum possible.
+
+func GreedyKnapsack(knapsack int, w []int, c []int) float64 {
+	n := len(w)
+	cw := make([]Pair, n)
+	for i := 0; i < n; i++ {
+		cw[i] = Pair{First: w[i], Seconds: c[i]}
+	}
+	sort.Slice(cw, func(i, j int) bool {
+		return cw[i].Seconds*cw[j].First > cw[j].Seconds*cw[i].First
+	})
+	var cost float64 = 0
+	i := 0
+	for knapsack > 0 && n != i {
+		if cw[i].First <= knapsack {
+			cost += float64(cw[i].Seconds)
+			knapsack -= cw[i].First
+		} else {
+			cost += float64(cw[i].Seconds*knapsack) / float64(cw[i].First)
+			break
+		}
+		i++
+	}
+	return cost
 }
