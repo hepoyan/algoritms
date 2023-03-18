@@ -57,14 +57,62 @@ func main() {
 
 	fmt.Println(scr.RedDistance("abc", "adck"))
 
-	/*	c := []int{55, 10, 47, 5, 4, 50, 8, 61, 85, 87}
-		weight := []int{95, 4, 60, 32, 23, 72, 80, 62, 65, 46}*/
-	c := []int{5, 11, 13}
-	weight := []int{2, 4, 6}
-	fmt.Println(scr.GreedyKnapsack(10, weight, c))
+	c := []int{55, 10, 47, 5, 4, 50, 8, 61, 85, 87}
+	weight := []int{95, 4, 60, 32, 23, 72, 80, 62, 65, 46}
+	/*	c := []int{5, 11, 13}
+		weight := []int{2, 4, 6}*/
+	fmt.Println(scr.GreedyKnapsack(269, weight, c))
 
-	fmt.Println(scr.Knapsack(10, weight, c))
+	fmt.Println(scr.Knapsack(269, weight, c))
 
-	fmt.Println(scr.ExtKnapsack(10, weight, c))
+	fmt.Println(scr.ExtKnapsack(269, weight, c))
+	/*
+		var n, m int
+		_, err := fmt.Scanf("%d", &n)
+		if err != nil {
+			return
+		}
+		_, err = fmt.Scanf("%d", &m)
+		if err != nil {
+			return
+		}*/
+	graph := make(scr.Graph, 8)
+	scr.CreateVertex(0, graph)
+	scr.CreateVertex(1, graph)
+	scr.CreateVertex(2, graph)
+	scr.CreateVertex(3, graph)
+	scr.CreateVertex(4, graph)
+	scr.CreateVertex(5, graph)
+	scr.CreateVertex(6, graph)
+	scr.CreateVertex(7, graph)
+	scr.CreateVertex(8, graph)
 
+	scr.CreateEdge(0, 1, graph)
+	scr.CreateEdge(0, 4, graph)
+	scr.CreateEdge(0, 7, graph)
+	scr.CreateEdge(1, 2, graph)
+	scr.CreateEdge(1, 3, graph)
+	scr.CreateEdge(2, 3, graph)
+	scr.CreateEdge(4, 5, graph)
+	scr.CreateEdge(5, 6, graph)
+	used := make([]bool, 8)
+	for i2 := range used {
+		used[i2] = false
+	}
+	fmt.Println(graph)
+	fmt.Printf("DFS")
+	scr.Dfs(graph, 0, used)
+	scr.Bfs(graph)
 }
+
+/*
+8 8
+0 1
+0 4
+0 7
+1 2
+1 3
+2 3
+4 5
+5 6
+*/

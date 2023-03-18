@@ -1,6 +1,7 @@
 package scr
 
 import (
+	"container/list"
 	"fmt"
 	"sort"
 )
@@ -551,7 +552,7 @@ type Pair struct {
 // We are given N items where each item has some weight and profit associated with it.
 // We are also given a bag with capacity W, [i.e., the bag can hold at most W weight in it].
 // The target is to put the items into the bag such that the sum of profits associated with them is the maximum possible.
-
+// O(n * W)
 func GreedyKnapsack(knapsack int, w []int, c []int) float64 {
 	n := len(w)
 	cw := make([]Pair, n)
@@ -580,6 +581,8 @@ func GreedyKnapsack(knapsack int, w []int, c []int) float64 {
 // dp[i] = max{dp[i - w[j]] != 1, dp[i - w[j]] + c[j]}
 //
 //	1<j<n
+//
+// O(n * W)
 func Knapsack(knapsack int, w []int, c []int) int {
 
 	dp := make([]int, knapsack+1)
@@ -601,6 +604,7 @@ func Knapsack(knapsack int, w []int, c []int) int {
 }
 
 // ExtKnapsack use each element as much as we want
+// O(n * W)
 func ExtKnapsack(knapsack int, w []int, c []int) int {
 
 	dp := make([]int, knapsack+1)
@@ -617,6 +621,85 @@ func ExtKnapsack(knapsack int, w []int, c []int) int {
 		}
 
 	}
-	fmt.Println(dp)
-	return dp[knapsack]
+	//fmt.Println(dp)
+	return maxElement(dp)
+}
+
+// Node
+// G = (V,E)
+// V - a set of vertices E -  a set of edges
+// undirected  graph is a set of objects (called vertices or nodes) that are connected together, where all the edges are bidirectional.
+// undirected  graph can be represented as a symmetric matrix
+// count vertices is n => count edges = n(n - 1)/2
+// matrix representation is not good,
+type Node struct {
+	Edges  int
+	Vertex []int
+}
+type Graph map[int][]int
+
+func CreateVertex(value int, graph Graph) {
+	if graph[value] == nil {
+		graph[value] = append(graph[value], value)
+	} else {
+		fmt.Println("vertex already created.")
+	}
+}
+
+func CreateEdge(node1 int, node2 int, graph Graph) {
+	graph[node1] = append(graph[node1], node2)
+	graph[node2] = append(graph[node2], node1)
+}
+
+//DFS & BFS
+
+// Dfs  - Depth First Traversal (or Search) for a graph is similar to the Depth First Traversal of a tree.
+// The only catch here is, that, unlike trees, graphs may contain cycles (a node may be visited twice).
+// To avoid processing a node more than once, use a boolean visited array.
+// A graph can have more than one DFS traversal.
+// In algorithm has 3 case (observed, observable,unobserved,)
+// O(V + E)
+
+func Dfs(graph Graph, v int, used []bool) {
+	used[v] = true
+	/*	for u := 0; u < len(graph[v]); u++ {
+		if !used[graph[v][u]] {
+			Dfs(graph, graph[v][u], used)
+		}
+	}*/
+	for _, u := range graph[v] {
+		if !used[u] {
+			Dfs(graph, u, used)
+		}
+	}
+	fmt.Println(v + 1)
+}
+
+// Bfs The breadth-first search (BFS) algorithm is used to search a tree or graph data structure for a node that meets a set of criteria.
+// It starts at the tree’s root or graph and searches/visits all nodes at the current depth level before moving on to the nodes at the next depth level.
+// Breadth-first search can be used to solve many problems in graph theory.
+// O(V + E)
+
+func Bfs(graph Graph) {
+	fmt.Printf("BFS  ")
+	used := make([]bool, len(graph))
+	for i := range used {
+		used[i] = false
+	}
+	used[0] = true
+	queue := list.New()
+	queue.PushBack(0)
+
+	for queue.Len() > 0 {
+		v := queue.Front() // First element
+
+		queue.Remove(v)
+		for _, u := range graph[(v.Value.(int))] {
+			if !used[u] {
+				used[u] = true
+				queue.PushBack(u)
+			}
+		}
+		fmt.Println(v.Value.(int) + 1)
+	}
 }
