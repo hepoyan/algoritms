@@ -66,16 +66,7 @@ func main() {
 	fmt.Println(scr.Knapsack(269, weight, c))
 
 	fmt.Println(scr.ExtKnapsack(269, weight, c))
-	/*
-		var n, m int
-		_, err := fmt.Scanf("%d", &n)
-		if err != nil {
-			return
-		}
-		_, err = fmt.Scanf("%d", &m)
-		if err != nil {
-			return
-		}*/
+
 	graph := make(scr.Graph, 8)
 	scr.CreateVertex(0, graph)
 	scr.CreateVertex(1, graph)
@@ -101,8 +92,55 @@ func main() {
 	}
 	fmt.Println(graph)
 	fmt.Printf("DFS")
-	scr.Dfs(graph, 0, used)
+	//scr.Dfs(graph, 0, used)
+
 	scr.Bfs(graph)
+
+	graph1 := make(scr.Graph, 5)
+	scr.CreateVertex(0, graph1)
+	scr.CreateVertex(1, graph1)
+	scr.CreateVertex(2, graph1)
+	scr.CreateVertex(3, graph1)
+	scr.CreateVertex(4, graph1)
+
+	scr.CreateEdge(0, 1, graph1)
+	scr.CreateEdge(0, 2, graph1)
+	scr.CreateEdge(1, 2, graph1)
+	scr.CreateEdge(2, 0, graph1)
+	scr.CreateEdge(2, 3, graph1)
+
+	/*	var stack = list.New()
+		used1 := make([]bool, 5)
+		for i2 := range used1 {
+			used1[i2] = false
+		}
+		fmt.Println("----------------------")
+		for v := 0; v < 5; v++ {
+			if !used1[v] {
+				scr.DfsForSort(graph1, v, used1, stack)
+			}
+		}
+		for e := stack.Front(); e != nil; e = e.Next() {
+			fmt.Printf("%d ", e.Value.(int)+1)
+		}*/
+	stack := scr.NewStack()
+	used1 := make([]bool, 5)
+	for i2 := range used1 {
+		used1[i2] = false
+	}
+	fmt.Println("----------------------")
+	for v := 0; v < 5; v++ {
+		if !used1[v] {
+			scr.DfsForSort(graph1, v, used1, stack)
+		}
+	}
+	fmt.Println(stack)
+	//	&{[4 3 2 1 5] 4}
+
+	/*for e := stack.Front(); e != nil; e = e.Next() {
+		fmt.Printf("%d ", e.Value.(int)+1)
+	}*/
+
 }
 
 /*

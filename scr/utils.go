@@ -543,11 +543,6 @@ func RedDistance(s1, s2 string) int {
 	return dp[n][m]
 }
 
-type Pair struct {
-	Wight int
-	Price int
-}
-
 // GreedyKnapsack
 // We are given N items where each item has some weight and profit associated with it.
 // We are also given a bag with capacity W, [i.e., the bag can hold at most W weight in it].
@@ -625,18 +620,13 @@ func ExtKnapsack(knapsack int, w []int, c []int) int {
 	return maxElement(dp)
 }
 
-// Node
+// NodeDfs
 // G = (V,E)
 // V - a set of vertices E -  a set of edges
 // undirected  graph is a set of objects (called vertices or nodes) that are connected together, where all the edges are bidirectional.
 // undirected  graph can be represented as a symmetric matrix
 // count vertices is n => count edges = n(n - 1)/2
 // matrix representation is not good,
-type Node struct {
-	Edges  int
-	Vertex []int
-}
-type Graph map[int][]int
 
 func CreateVertex(value int, graph Graph) {
 	if graph[value] == nil {
@@ -702,4 +692,22 @@ func Bfs(graph Graph) {
 		}
 		fmt.Println(v.Value.(int) + 1)
 	}
+}
+
+//Directed acyclic graph (DAC)
+//Topology sort in Graph
+//Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge uv, vertex u comes before v in the ordering.
+//Topological Sorting for a graph is not possible if the graph is not a DAG.
+
+func DfsForSort(graph Graph, v int, used []bool, sorted *Stack) {
+	used[v] = true
+	for _, u := range graph[v] {
+		if !used[u] {
+			DfsForSort(graph, u, used, sorted)
+		}
+
+	}
+
+	sorted.Push(v + 1)
+
 }
